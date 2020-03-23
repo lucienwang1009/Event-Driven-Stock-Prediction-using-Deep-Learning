@@ -14,7 +14,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class news_Reuters:
     def __init__(self):
-        fin = open('./input/tickerList.csv')
+        fin = csv.reader(open('./input/tickerList.csv', 'r'))
+        fin.__next__()
 
         filterList = set()
         try: # this is used when we restart a task
@@ -25,8 +26,8 @@ class news_Reuters:
 
         dateList = self.dateGenerator(1000) # look back on the past X days
         for line in fin: # iterate all possible tickers
-            line = line.strip().split(',')
-            ticker, name, exchange, MarketCap = line
+            print(line)
+            ticker, name, exchange, MarketCap = line[1:]
             if ticker in filterList: continue
             print("%s - %s - %s - %s" % (ticker, name, exchange, MarketCap))
             self.contents(ticker, name, line, dateList, exchange)

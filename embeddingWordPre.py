@@ -2,11 +2,15 @@ from gensim.test.utils import datapath, get_tmpfile
 from gensim.models import KeyedVectors
 from gensim.scripts.glove2word2vec import glove2word2vec
 import os
+import operator
 import numpy as np
 from nltk.corpus import reuters
+from util import unify_word
 
 
 import json
+
+
 # Taking Out Word Vectors from standard Glove WV of stanford for our vocabulary
 def get_reuters_data(n_vocab):
     # return variables

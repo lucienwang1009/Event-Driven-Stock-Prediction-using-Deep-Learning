@@ -102,13 +102,13 @@ def build(wordEmbedding, w2i_file, max_words=60):
     with open(w2i_file) as data_file:
         word2idx = json.load(data_file)
 
-    #gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "train",0)
-    gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "validation",0)
-    gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "test",0)
-    # Making Additional Features if required
-    #gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "train",1)
-    gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "validation",1)
-    gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "test",1)
+    gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "train",0)
+    # gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "validation",0)
+    # gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "test",0)
+    # # Making Additional Features if required
+    # #gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "train",1)
+    # gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "validation",1)
+    # gen_FeatureMatrix(wordEmbedding, word2idx, priceDt, max_words, "test",1)
 
 def main(we, w2i_file):
     wordEmbedding = readGlove(we)

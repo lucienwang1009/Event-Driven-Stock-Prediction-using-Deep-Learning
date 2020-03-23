@@ -17,7 +17,7 @@ def preprocess(cap):
             return float(cap)
     else:
         return np.NaN
-    
+
 
 
 def getTickers(percent):
@@ -39,11 +39,11 @@ def getTickers(percent):
     columns = ['Symbol', 'Name', 'Exchange', 'MarketCap']
     tot_data = tot_data[columns]
     tot_data = tot_data.dropna().reset_index(drop=True)
-    print('Number of Samples:',tot_data.shape[0])
     tot_data['MarketCap'] = tot_data['MarketCap'].apply(lambda x : preprocess(x))
     markets_caps = list(tot_data['MarketCap'])
-    tot_data[tot_data['MarketCap']<=np.percentile(markets_caps, 99.9)].shape
+    tot_data = tot_data.loc[tot_data['MarketCap']>=np.percentile(markets_caps, 100 - percent)]
     tot_data.to_csv('input/tickerList.csv')
+    print('Number of Samples:',tot_data.shape[0])
 
 
 

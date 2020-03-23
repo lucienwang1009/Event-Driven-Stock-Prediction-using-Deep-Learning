@@ -1,23 +1,20 @@
 #!/usr/bin/python
 import json
 import os
-import en
 import nltk
 import numpy as np
 import util
+import csv
 
 # Use pretrained word vector to generate our target features
 # required input data:
-# ./input/glove.xB.xd.txt 
-# ./input/stopWords
+# ./input/glove.xB.xd.txt
 # ./input/stockReturns.json
 # ./input/news_reuters.csv
-# ./input/featureMatrix
 
-# output file name: 
+# output file name:
 # input/featureMatrix_train
 # input/featureMatrix_test
-
 
 def wordVec(glove_file):
     wordDict = {}
@@ -25,12 +22,12 @@ def wordVec(glove_file):
         print("Loading word vector ...")
         for line in f:
             line = line.strip().split(' ')
-            key, values = line[0], map(float, line[1:])
+            key, values = line[0], list(map(float, line[1:]))
             wordDict[key] = values
     return wordDict, len(values) # return word vector and word vector dimension
 
 
-def gen_FeatureMatrix(news_file, price_file, stopWords_file, output, wordDict, dim_wordVec, sentense_len, term_type, mtype):
+def gen_FeatureMatrix(news_file, price_file, output, wordDict, dim_wordVec, sentense_len, term_type, mtype):
     with open(price_file) as file:
         print("Loading price info ...")
         priceDt = json.load(file)[term_type]
@@ -38,14 +35,11 @@ def gen_FeatureMatrix(news_file, price_file, stopWords_file, output, wordDict, d
     testDates = util.dateGenerator(300)
     os.system('rm ' + output + mtype)
 
-    stopWords = set()
-    with open(stopWords_file) as file:
-        for word in file:
-            stopWords.add(word.strip())
+    stopWords = set(nltk.corpus.stopwords.words('english'))
 
     with open(news_file) as f:
-        for line in f:
-            line = line.strip().split(',')
+        reader = csv.reader(f)
+        for line in reader:
             if len(line) != 6: continue
             '''
             newsType: [topStory, normal]
@@ -85,14 +79,13 @@ def gen_FeatureMatrix(news_file, price_file, stopWords_file, output, wordDict, d
 def main():
     glove_file = "./input/glove.6B.100d.txt"
     news_file = "./input/news_reuters.csv"
-    stopWords_file = "./input/stopWords"
     price_file = "./input/stockReturns.json"
     output = './input/featureMatrix_'
     sentense_len = 20
     term_type = 'short'
     wordDict, dim_wordVec = wordVec(glove_file)
-    gen_FeatureMatrix(news_file, price_file, stopWords_file, output, wordDict, dim_wordVec, sentense_len, term_type, 'train')
-    gen_FeatureMatrix(news_file, price_file, stopWords_file, output, wordDict, dim_wordVec, sentense_len, term_type, 'test')
+    gen_FeatureMatrix(news_file, price_file, output, wordDict, dim_wordVec, sentense_len, term_type, 'train')
+    gen_FeatureMatrix(news_file, price_file, output, wordDict, dim_wordVec, sentense_len, term_type, 'test')
 
 
 if __name__ == "__main__":
